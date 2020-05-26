@@ -1,4 +1,4 @@
-BIN := aws-url-shorter
+BIN := amzn-url-shorter
 VERSION := $$(make -s show-version)
 VERSION_PATH := cmd/$(BIN)
 CURRENT_REVISION := $(shell git rev-parse --short HEAD)
