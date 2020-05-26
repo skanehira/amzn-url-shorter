@@ -18,5 +18,7 @@ $ aws-url-shorter url
 $ go get github.com/skanehira/aws-url-shorter/cmd/aws-url-shorter
 ```
 
+You also can download from [releases](https://github.com/skanehira/aws-url-shorter/releases)
+
 ## Author
 skanehira
