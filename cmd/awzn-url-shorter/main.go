@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"flag"
 	"fmt"
@@ -8,7 +9,7 @@ import (
 	"strings"
 )
 
-var version = "1.0.0"
+var version = "1.1.0"
 
 var (
 	errInvalidURL = errors.New("invalid amazon url")
@@ -16,7 +17,6 @@ var (
 
 func main() {
 	name := "amzn-url-shorter"
-
 	fs := flag.NewFlagSet(name, flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	fs.Usage = func() {
@@ -27,6 +27,7 @@ Version: %s
 
 Usage:
  $ %[1]s url
+ $ %[1]s < file
 `, name, version)
 	}
 
@@ -39,15 +40,41 @@ Usage:
 
 	args := fs.Args()
 	if len(args) == 0 {
-		fs.Usage()
+		urls, err := multishorter()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+
+		for _, url := range urls {
+			fmt.Println(url)
+		}
 		return
 	}
 
 	url, err := shorter(args[0])
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 	fmt.Println(url)
+}
+
+func multishorter() ([]string, error) {
+	var urls []string
+	var url string
+
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		url = scanner.Text()
+		url, err := shorter(url)
+		if err != nil {
+			return nil, err
+		}
+		urls = append(urls, url)
+	}
+
+	return urls, nil
 }
 
 func shorter(url string) (string, error) {
