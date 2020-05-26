@@ -11,16 +11,17 @@ import (
 var version = "1.0.0"
 
 var (
-	errInvalidURL = errors.New("invalid aws url")
+	errInvalidURL = errors.New("invalid amazon url")
 )
 
 func main() {
-	name := "aws-url-shorter"
+	name := "amzn-url-shorter"
+
 	fs := flag.NewFlagSet(name, flag.ContinueOnError)
 	fs.SetOutput(os.Stderr)
 	fs.Usage = func() {
 		fs.SetOutput(os.Stdout)
-		fmt.Printf(`%[1]s - generate short aws url
+		fmt.Printf(`%[1]s - generate short amazon url
 
 Version: %s
 
