@@ -50,7 +50,7 @@ Usage:
 }
 
 func shorter(url string) (string, error) {
-	idx := strings.Index(url, "dp")
+	idx := strings.Index(url, "dp/")
 	if idx == -1 {
 		return "", ErrInvalidURL
 	}
