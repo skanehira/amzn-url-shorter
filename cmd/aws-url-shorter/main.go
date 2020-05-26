@@ -11,7 +11,7 @@ import (
 var version = "1.0.0"
 
 var (
-	ErrInvalidURL = errors.New("invalid aws url")
+	errInvalidURL = errors.New("invalid aws url")
 )
 
 func main() {
@@ -52,13 +52,13 @@ Usage:
 func shorter(url string) (string, error) {
 	idx := strings.Index(url, "dp/")
 	if idx == -1 {
-		return "", ErrInvalidURL
+		return "", errInvalidURL
 	}
 	idx += 3
 	end := idx + 10
 
 	if len(url) < end {
-		return "", ErrInvalidURL
+		return "", errInvalidURL
 	}
 
 	return "https://amazon.co.jp/dp/" + url[idx:end], nil

@@ -43,15 +43,15 @@ func TestShorterFailed(t *testing.T) {
 	}{
 		{
 			url:  "",
-			want: ErrInvalidURL,
+			want: errInvalidURL,
 		},
 		{
 			url:  "https://www.amazon.co.jp",
-			want: ErrInvalidURL,
+			want: errInvalidURL,
 		},
 		{
 			url:  "https://www.amazon.co.jp/dp/",
-			want: ErrInvalidURL,
+			want: errInvalidURL,
 		},
 	}
 
