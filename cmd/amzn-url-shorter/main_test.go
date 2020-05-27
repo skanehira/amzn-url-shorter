@@ -1,6 +1,9 @@
 package main
 
 import (
+	"errors"
+	"fmt"
+	"os"
 	"testing"
 )
 
@@ -43,22 +46,45 @@ func TestShorterFailed(t *testing.T) {
 	}{
 		{
 			url:  "",
-			want: errInvalidURL,
+			want: fmt.Errorf("%s: %s", errInvalidURL, ""),
 		},
 		{
 			url:  "https://www.amazon.co.jp",
-			want: errInvalidURL,
+			want: fmt.Errorf("%s: %s", errInvalidURL, "https://www.amazon.co.jp"),
 		},
 		{
 			url:  "https://www.amazon.co.jp/dp/",
-			want: errInvalidURL,
+			want: fmt.Errorf("%s: %s", errInvalidURL, "https://www.amazon.co.jp/dp/"),
 		},
 	}
 
 	for _, tt := range tests {
 		_, err := shorter(tt.url)
-		if err != tt.want {
-			t.Errorf("unexpected error: want=%s got=%s", tt.want, err)
+		if !errors.As(err, &errInvalidURL) {
+			t.Errorf("unexpected error: want=%v got=%v", tt.want, err)
+		}
+	}
+}
+
+func TestMultiShorter(t *testing.T) {
+	wants := []string{
+		"https://amazon.co.jp/dp/B087GHS748",
+		"https://amazon.co.jp/dp/B083ZVZXSW",
+	}
+
+	f, err := os.Open("testdata/urls.txt")
+	if err != nil {
+		t.Fatalf("failed to read file %s", err)
+	}
+
+	urls, err := multishorter(f)
+	if err != nil {
+		t.Fatalf("failed to get short url: %s", err)
+	}
+
+	for i, url := range urls {
+		if wants[i] != url {
+			t.Errorf("unexpected url: \nwant=%s \ngot=%s \n", wants[i], url)
 		}
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 )
@@ -40,7 +41,7 @@ Usage:
 
 	args := fs.Args()
 	if len(args) == 0 {
-		urls, err := multishorter()
+		urls, err := multishorter(os.Stdin)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -60,11 +61,11 @@ Usage:
 	fmt.Println(url)
 }
 
-func multishorter() ([]string, error) {
+func multishorter(in io.Reader) ([]string, error) {
 	var urls []string
 	var url string
 
-	scanner := bufio.NewScanner(os.Stdin)
+	scanner := bufio.NewScanner(in)
 	for scanner.Scan() {
 		url = scanner.Text()
 		url, err := shorter(url)
@@ -80,13 +81,13 @@ func multishorter() ([]string, error) {
 func shorter(url string) (string, error) {
 	idx := strings.Index(url, "dp/")
 	if idx == -1 {
-		return "", errInvalidURL
+		return "", fmt.Errorf("%s: %s", errInvalidURL, url)
 	}
 	idx += 3
 	end := idx + 10
 
 	if len(url) < end {
-		return "", errInvalidURL
+		return "", fmt.Errorf("%s: %s", errInvalidURL, url)
 	}
 
 	return "https://amazon.co.jp/dp/" + url[idx:end], nil
