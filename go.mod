@@ -1,3 +1,3 @@
-module github.com/skanehira/aws-url-shoter
+module github.com/skanehira/amzn-url-shorter
 
 go 1.14
